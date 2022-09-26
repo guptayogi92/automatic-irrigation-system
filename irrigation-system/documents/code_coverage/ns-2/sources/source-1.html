@@ -1,0 +1,229 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CommonMethods</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.automation.irrigationsystem.common</a>
+</div>
+
+<h1>Coverage Summary for Class: CommonMethods (com.automation.irrigationsystem.common)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CommonMethods</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (11/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.1%
+  </span>
+  <span class="absValue">
+    (39/59)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.automation.irrigationsystem.common;
+&nbsp;
+&nbsp;import com.automation.irrigationsystem.exception.InvalidRequestException;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.yaml.snakeyaml.util.EnumUtils;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.util.Calendar;
+&nbsp;
+<b class="fc">&nbsp;@Slf4j</b>
+&nbsp;public class CommonMethods {
+&nbsp;
+<b class="nc">&nbsp;    private CommonMethods() {</b>
+<b class="nc">&nbsp;        throw new IllegalStateException(&quot;Utility class&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean isBlank(String str) {
+<b class="fc">&nbsp;        return (null == str || str.isBlank());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void throwExceptionIfEmpty(String str, String responseMessage) {
+<b class="fc">&nbsp;        if(isBlank(str)) {</b>
+<b class="fc">&nbsp;            throw new InvalidRequestException(ResponseCodes.EMPTY_INPUT, responseMessage);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void throwExceptionIfNotNumber(String str, String responseMessage) {
+<b class="fc">&nbsp;        if(isBlank(str)) {</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;        try{
+<b class="fc">&nbsp;            Integer.parseInt(str);</b>
+<b class="fc">&nbsp;        }catch (NumberFormatException e) {</b>
+<b class="fc">&nbsp;            throw new InvalidRequestException(ResponseCodes.INVALID_INPUT, responseMessage);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void throwExceptionIfLengthInvalid(String str, int length, String responseMessage) {
+<b class="fc">&nbsp;        if(!isBlank(str) &amp;&amp; str.length() &gt; length) {</b>
+<b class="nc">&nbsp;            throw new InvalidRequestException(ResponseCodes.INVALID_INPUT, responseMessage);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static &lt;T extends Enum&lt;T&gt;&gt; void validateInputWithEnum(Class&lt;T&gt; enumClass, String valueToMatch, String responseMessage) {
+<b class="fc">&nbsp;        if(isBlank(valueToMatch)) {</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;        try {
+<b class="fc">&nbsp;            EnumUtils.findEnumInsensitiveCase(enumClass, valueToMatch);</b>
+<b class="nc">&nbsp;        }catch(IllegalArgumentException e) {</b>
+<b class="nc">&nbsp;            throw new InvalidRequestException(ResponseCodes.INVALID_INPUT, responseMessage);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String getWeatherNameForDate(Calendar cal) {
+<b class="fc">&nbsp;        if(null == cal) {</b>
+<b class="nc">&nbsp;            return &quot;&quot;;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        int month = cal.get(Calendar.MONTH) + 1;</b>
+<b class="fc">&nbsp;        if(month == 12 || month == 1){</b>
+<b class="nc">&nbsp;            return WeatherTypes.WINTER.name();</b>
+<b class="fc">&nbsp;        }else if(month == 2 || month == 3) {</b>
+<b class="nc">&nbsp;            return WeatherTypes.SPRING.name();</b>
+<b class="fc">&nbsp;        }else if(month &gt;= 4 &amp;&amp; month &lt;= 6) {</b>
+<b class="nc">&nbsp;            return WeatherTypes.SUMMER.name();</b>
+<b class="fc">&nbsp;        } else if (month ==7 || month == 8) {</b>
+<b class="nc">&nbsp;            return WeatherTypes.MONSOON.name();</b>
+<b class="fc">&nbsp;        }else if(month == 9) {</b>
+<b class="fc">&nbsp;            int day = cal.get(Calendar.DAY_OF_MONTH);</b>
+<b class="fc">&nbsp;            if(day &lt; 16) {</b>
+<b class="nc">&nbsp;                return WeatherTypes.MONSOON.name();</b>
+&nbsp;            }else {
+<b class="fc">&nbsp;                return WeatherTypes.AUTUMN.name();</b>
+&nbsp;            }
+&nbsp;        }else {
+<b class="nc">&nbsp;            return WeatherTypes.AUTUMN.name();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean validateIrrigationStartTime(String startTime) {
+<b class="fc">&nbsp;        if(CommonMethods.isBlank(startTime)) {</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        String [] splitStr = startTime.split(&quot;:&quot;);</b>
+<b class="fc">&nbsp;        if(splitStr.length != 2) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        String hourStr = splitStr[0];</b>
+<b class="fc">&nbsp;        String minuteStr = splitStr[1];</b>
+&nbsp;        int hour;
+&nbsp;        int minute;
+&nbsp;        try {
+<b class="fc">&nbsp;            hour = Integer.parseInt(hourStr.trim());</b>
+<b class="nc">&nbsp;        }catch(NumberFormatException e) {</b>
+<b class="nc">&nbsp;            return false;</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            minute = Integer.parseInt(minuteStr.trim());</b>
+<b class="nc">&nbsp;        }catch(NumberFormatException e) {</b>
+<b class="nc">&nbsp;            return false;</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return !(hour &lt; 0 || hour &gt; 23 || minute &lt; 0 || minute &gt; 59);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String getTruncatedStartTime(String startTime, String defaultStartTime) {
+&nbsp;        //If there is any error in start time than return 08:00 as default time.
+<b class="fc">&nbsp;        if(!validateIrrigationStartTime(startTime)) {</b>
+<b class="nc">&nbsp;            return defaultStartTime;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        if(CommonMethods.isBlank(startTime)) {</b>
+<b class="nc">&nbsp;            return defaultStartTime;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        String [] splitStr = startTime.split(&quot;:&quot;);</b>
+<b class="fc">&nbsp;        return splitStr[0].trim()+&quot;:&quot;+splitStr[1].trim();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String getDefaultValueIfNull(String defaultVal, String newVal) {
+<b class="fc">&nbsp;        return CommonMethods.isBlank(newVal) ? defaultVal : newVal;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static BigDecimal getDefaultValueBDIfNull(BigDecimal defaultVal, String newVal) {
+<b class="fc">&nbsp;        return CommonMethods.isBlank(newVal) ? defaultVal : new BigDecimal(newVal);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-09-26 14:50</div>
+</div>
+</body>
+</html>

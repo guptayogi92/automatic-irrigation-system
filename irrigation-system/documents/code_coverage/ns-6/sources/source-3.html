@@ -1,0 +1,160 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PlotIrrigationState</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.automation.irrigationsystem.entity</a>
+</div>
+
+<h1>Coverage Summary for Class: PlotIrrigationState (com.automation.irrigationsystem.entity)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PlotIrrigationState</td>
+<td class="coverageStat">
+  <span class="percent">
+    9.1%
+  </span>
+  <span class="absValue">
+    (1/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    9.1%
+  </span>
+  <span class="absValue">
+    (1/11)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">PlotIrrigationState$HibernateProxy$elg8Nm11</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    9.1%
+  </span>
+  <span class="absValue">
+    (1/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    9.1%
+  </span>
+  <span class="absValue">
+    (1/11)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.automation.irrigationsystem.entity;
+&nbsp;
+&nbsp;import lombok.Data;
+&nbsp;import lombok.NoArgsConstructor;
+&nbsp;
+&nbsp;import javax.persistence.*;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.util.Date;
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;PLOT_IRRIGATION_STATE&quot;)
+<b class="nc">&nbsp;@Data</b>
+<b class="fc">&nbsp;@NoArgsConstructor</b>
+&nbsp;public class PlotIrrigationState {
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.AUTO)
+&nbsp;    @Column(name=&quot;ID&quot;, nullable = false, precision = 22, scale = 0)
+<b class="nc">&nbsp;    private BigDecimal id;</b>
+&nbsp;
+&nbsp;    @Column(name=&quot;PLOT_ID&quot;, nullable = false, precision = 2, scale = 0)
+<b class="nc">&nbsp;    private BigDecimal plotId;</b>
+&nbsp;
+&nbsp;    @Column(name = &quot;DEVICE_ID&quot;, nullable = false, precision = 22, scale = 0)
+<b class="nc">&nbsp;    private BigDecimal deviceId;</b>
+&nbsp;
+&nbsp;    @Column(name=&quot;IRRIGATION_STATE&quot;, length = 20, nullable = false)
+<b class="nc">&nbsp;    private String irrigationState;</b>
+&nbsp;
+&nbsp;    @Column(name=&quot;RETRY_COUNT&quot;, nullable = false, precision = 1, scale = 0)
+<b class="nc">&nbsp;    private BigDecimal retryCount;</b>
+&nbsp;
+&nbsp;    @Temporal(TemporalType.TIMESTAMP)
+&nbsp;    @Column(name=&quot;SCHEDULED_DT&quot;, nullable = false)
+<b class="nc">&nbsp;    private Date scheduledDt;</b>
+&nbsp;
+&nbsp;    @Column(name=&quot;HOURS_TO_IRRIGATE&quot;, nullable = false, precision = 2, scale = 0)
+<b class="nc">&nbsp;    private BigDecimal hoursToIrrigate;</b>
+&nbsp;
+&nbsp;    @Temporal(TemporalType.TIMESTAMP)
+&nbsp;    @Column(name=&quot;CREATED_DT&quot;, nullable = false)
+<b class="nc">&nbsp;    private Date createdDt;</b>
+&nbsp;
+&nbsp;    @Temporal(TemporalType.TIMESTAMP)
+&nbsp;    @Column(name=&quot;MODIFIED_DT&quot;, nullable = true)
+<b class="nc">&nbsp;    private Date modifiedDt;</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-09-26 14:50</div>
+</div>
+</body>
+</html>

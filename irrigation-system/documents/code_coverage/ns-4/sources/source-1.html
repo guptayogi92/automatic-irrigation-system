@@ -1,0 +1,163 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PlotController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.automation.irrigationsystem.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: PlotController (com.automation.irrigationsystem.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PlotController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (2/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.7%
+  </span>
+  <span class="absValue">
+    (2/12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.automation.irrigationsystem.controller;
+&nbsp;
+&nbsp;import com.automation.irrigationsystem.iface.IPlotService;
+&nbsp;import com.automation.irrigationsystem.request.EditPlotRequest;
+&nbsp;import com.automation.irrigationsystem.request.NewPlotRequest;
+&nbsp;import com.automation.irrigationsystem.response.GetAllPlotResponse;
+&nbsp;import com.automation.irrigationsystem.response.NewPlotResponse;
+&nbsp;import com.automation.irrigationsystem.response.Response;
+&nbsp;import io.swagger.annotations.Api;
+&nbsp;import io.swagger.annotations.ApiOperation;
+&nbsp;import io.swagger.annotations.ApiParam;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+<b class="fc">&nbsp;@Slf4j</b>
+&nbsp;@RestController
+&nbsp;@Api(tags = {&quot;Plot related management&quot;})
+&nbsp;@RequestMapping(&quot;/irrigation/plotmanagement/customer/{customer_id}&quot;)
+<b class="fc">&nbsp;public class PlotController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private IPlotService iPlotService;
+&nbsp;
+&nbsp;    @PostMapping(value = &quot;&quot;, produces = {&quot;application/json&quot;, &quot;application/xml&quot;})
+&nbsp;    @ApiOperation(value = &quot;This API is used to Configure a new plot&quot;)
+&nbsp;    public ResponseEntity&lt;NewPlotResponse&gt; addNewPlot(@ApiParam(value = &quot;Customer Id of the plot&quot;) @PathVariable(&quot;customer_id&quot;) final String customerId,
+&nbsp;                                                      @RequestBody final NewPlotRequest newPlotRequest) {
+<b class="nc">&nbsp;        log.info(&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Adding new plot for the customer id: {}&quot;, customerId);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(iPlotService.addNewPlot(customerId, newPlotRequest), HttpStatus.CREATED);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(value = &quot;&quot;, produces = {&quot;application/json&quot;, &quot;application/xml&quot;})
+&nbsp;    @ApiOperation(value = &quot;This API is used to retrieve available plots for a customer&quot;)
+&nbsp;    public ResponseEntity&lt;GetAllPlotResponse&gt; getAllPlot(@ApiParam(value = &quot;Customer Id of the plot&quot;) @PathVariable(&quot;customer_id&quot;) final String customerId) {
+<b class="nc">&nbsp;        log.info(&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Retrieving all the plot for the customer id: {}&quot;, customerId);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(iPlotService.getAllPlots(customerId));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(value= &quot;plot/{plot_id}&quot;, produces = {&quot;application/json&quot;, &quot;application/xml&quot;})
+&nbsp;    @ApiOperation(value = &quot;This API is used to update the plot for a customer&quot;)
+&nbsp;    public ResponseEntity&lt;Response&gt; updatePlot(@ApiParam(value = &quot;Customer Id of the plot&quot;) @PathVariable(&quot;customer_id&quot;) final String customerId
+&nbsp;            , @ApiParam(value = &quot;Plot Id to update Plot&quot;) @PathVariable(&quot;plot_id&quot;) final String plotId
+&nbsp;            , @RequestBody final EditPlotRequest editPlotReq) {
+<b class="nc">&nbsp;        log.info(&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Updating plot for the customer id: {}, plot id: {}&quot;, customerId, plotId);</b>
+<b class="nc">&nbsp;        iPlotService.updatePlot(customerId, plotId, editPlotReq);</b>
+<b class="nc">&nbsp;        return ResponseEntity.noContent().build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(value= &quot;plot/{plot_id}&quot;, produces = {&quot;application/json&quot;, &quot;application/xml&quot;})
+&nbsp;    @ApiOperation(value = &quot;This API is used to Delete the plot for a customer&quot;)
+&nbsp;    public ResponseEntity&lt;Response&gt; deletePlot(@ApiParam(value = &quot;Customer Id of the plot&quot;) @PathVariable(&quot;customer_id&quot;) final String customerId
+&nbsp;            , @ApiParam(value = &quot;Plot Id to delete Plot&quot;) @PathVariable(&quot;plot_id&quot;) final String plotId) {
+<b class="nc">&nbsp;        log.info(&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Deleting plot for the customer id: {}, plot id: {}&quot;, customerId, plotId);</b>
+<b class="nc">&nbsp;        iPlotService.deletePlot(customerId, plotId);</b>
+<b class="nc">&nbsp;        return ResponseEntity.noContent().build();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-09-26 14:50</div>
+</div>
+</body>
+</html>

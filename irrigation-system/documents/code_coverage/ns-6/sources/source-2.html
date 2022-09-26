@@ -1,0 +1,184 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Plot</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.automation.irrigationsystem.entity</a>
+</div>
+
+<h1>Coverage Summary for Class: Plot (com.automation.irrigationsystem.entity)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Plot</td>
+<td class="coverageStat">
+  <span class="percent">
+    78.9%
+  </span>
+  <span class="absValue">
+    (15/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    78.9%
+  </span>
+  <span class="absValue">
+    (15/19)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Plot$HibernateProxy$ObyEsjiW</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    78.9%
+  </span>
+  <span class="absValue">
+    (15/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    78.9%
+  </span>
+  <span class="absValue">
+    (15/19)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.automation.irrigationsystem.entity;
+&nbsp;
+&nbsp;import lombok.Data;
+&nbsp;import lombok.NoArgsConstructor;
+&nbsp;
+&nbsp;import javax.persistence.*;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.util.Date;
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;PLOT&quot;)
+<b class="fc">&nbsp;@Data</b>
+<b class="fc">&nbsp;@NoArgsConstructor</b>
+&nbsp;public class Plot {
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.AUTO)
+&nbsp;    @Column(name = &quot;ID&quot;, unique = true, nullable = false, precision = 22, scale = 0)
+<b class="fc">&nbsp;    private BigDecimal id;</b>
+&nbsp;
+&nbsp;    @Column(name = &quot;CUSTOMER_ID&quot;, unique = false, nullable = false, precision = 22, scale = 0)
+<b class="fc">&nbsp;    private BigDecimal customerId;</b>
+&nbsp;
+&nbsp;    @Column(name=&quot;PLOT_NAME&quot;, length = 50, nullable = false)
+<b class="fc">&nbsp;    private String plotName;</b>
+&nbsp;
+&nbsp;    @Column(name=&quot;DESCRIPTION&quot;, length = 200, nullable = true)
+<b class="fc">&nbsp;    private String description;</b>
+&nbsp;
+&nbsp;    @Column(name=&quot;ADDRESS&quot;, length = 200, nullable = false)
+<b class="fc">&nbsp;    private String address;</b>
+&nbsp;
+&nbsp;    @Column(name=&quot;WIDTH&quot;, nullable = false)
+<b class="fc">&nbsp;    private BigDecimal width;</b>
+&nbsp;
+&nbsp;    @Column(name=&quot;HEIGHT&quot;, nullable = false)
+<b class="fc">&nbsp;    private BigDecimal height;</b>
+&nbsp;
+&nbsp;    @Column(name=&quot;UNIT&quot;, length = 10, nullable = false)
+<b class="fc">&nbsp;    private String unit;</b>
+&nbsp;
+&nbsp;    @Column(name=&quot;SCHEDULE_TYPE&quot;, length = 7, nullable = false)
+<b class="fc">&nbsp;    private String scheduleType;</b>
+&nbsp;
+&nbsp;    @Column(name = &quot;CUSTOM_SCHED_ID&quot;, nullable = true, precision = 22, scale = 0)
+<b class="nc">&nbsp;    private BigDecimal customSchedId;</b>
+&nbsp;
+&nbsp;    @Column(name = &quot;DEVICE_ID&quot;, nullable = false, precision = 22, scale = 0)
+<b class="fc">&nbsp;    private BigDecimal deviceId;</b>
+&nbsp;
+&nbsp;    @Column(name=&quot;CROP_NAME&quot;, length = 20, nullable = false)
+<b class="fc">&nbsp;    private String cropName;</b>
+&nbsp;
+&nbsp;    @Column(name=&quot;SOIL_TYPE&quot;, length = 20, nullable = false)
+<b class="fc">&nbsp;    private String soilType;</b>
+&nbsp;
+&nbsp;    @Column(name = &quot;ACTIVE_FLG&quot;, nullable = false, precision = 1, scale = 0)
+<b class="nc">&nbsp;    private BigDecimal activeFlg;</b>
+&nbsp;
+&nbsp;    @Temporal(TemporalType.TIMESTAMP)
+&nbsp;    @Column(name=&quot;CREATED_DT&quot;, nullable = false)
+<b class="nc">&nbsp;    private Date createdDt;</b>
+&nbsp;
+&nbsp;    @Temporal(TemporalType.TIMESTAMP)
+&nbsp;    @Column(name=&quot;MODIFIED_DT&quot;, nullable = true)
+<b class="nc">&nbsp;    private Date modifiedDt;</b>
+&nbsp;
+&nbsp;    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+&nbsp;    @JoinColumn(name = &quot;CUSTOM_SCHED_ID&quot;, referencedColumnName = &quot;id&quot;, insertable = false, updatable = false)
+<b class="fc">&nbsp;    private CustomSchedule customSchedule;</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-09-26 14:50</div>
+</div>
+</body>
+</html>

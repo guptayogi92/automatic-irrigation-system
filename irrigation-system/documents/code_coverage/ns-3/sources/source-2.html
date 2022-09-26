@@ -1,0 +1,237 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DoIrrigationScheduler</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.automation.irrigationsystem.config</a>
+</div>
+
+<h1>Coverage Summary for Class: DoIrrigationScheduler (com.automation.irrigationsystem.config)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DoIrrigationScheduler</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    42.9%
+  </span>
+  <span class="absValue">
+    (3/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    40%
+  </span>
+  <span class="absValue">
+    (22/55)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.automation.irrigationsystem.config;
+&nbsp;
+&nbsp;import com.automation.irrigationsystem.common.SchedulingState;
+&nbsp;import com.automation.irrigationsystem.common.SendEmailUtility;
+&nbsp;import com.automation.irrigationsystem.dataclass.ScheduleFailEmailModel;
+&nbsp;import com.automation.irrigationsystem.entity.PlotIrrigationState;
+&nbsp;import com.automation.irrigationsystem.exception.SensorNotAvailableException;
+&nbsp;import com.automation.irrigationsystem.iface.IDeviceCommunicationService;
+&nbsp;import com.automation.irrigationsystem.repository.PlotIrrigationStateRepository;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.scheduling.annotation.Scheduled;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.util.CollectionUtils;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.util.Calendar;
+&nbsp;import java.util.Date;
+&nbsp;import java.util.List;
+&nbsp;import java.util.concurrent.CompletableFuture;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;@Slf4j</b>
+<b class="fc">&nbsp;public class DoIrrigationScheduler {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private PlotIrrigationStateRepository plotIrrigationStateRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private IDeviceCommunicationService iDeviceCommunicationService;
+&nbsp;
+&nbsp;    @Value(&quot;${irrigation.schedule.retryCount:3}&quot;)
+&nbsp;    private int retryCount;
+&nbsp;
+&nbsp;    @Value(&quot;${irrigation.alert.deviceCommFail.emailFrom:gupta.yogesh1999@gmail.com}&quot;)
+&nbsp;    private String emailFrom;
+&nbsp;
+&nbsp;    @Value(&quot;${irrigation.alert.deviceCommFail.emailTo:gupta.yogi92@gmail.com}&quot;)
+&nbsp;    private String emailTo;
+&nbsp;
+&nbsp;    @Value(&quot;${irrigation.alert.deviceCommFail.emailSub}&quot;)
+&nbsp;    private String emailSubject;
+&nbsp;
+&nbsp;    @Value(&quot;${irrigation.alert.deviceCommFail.emailBody}&quot;)
+&nbsp;    private String emailBody;
+&nbsp;
+&nbsp;    @Value(&quot;${irrigation.alert.deviceCommFail.emailPdw}&quot;)
+&nbsp;    private String emailPdw;
+&nbsp;
+&nbsp;    @Scheduled(fixedDelay = 100000)
+&nbsp;    public void doTheIrrigation() {
+<b class="fc">&nbsp;        log.info(&quot;---Scheduler start to do the irrigation, Configured Retry Count is: {}&quot;, retryCount);</b>
+<b class="fc">&nbsp;        Calendar startDate = Calendar.getInstance();</b>
+<b class="fc">&nbsp;        Calendar endDate = Calendar.getInstance();</b>
+<b class="fc">&nbsp;        Calendar retryStartDate = Calendar.getInstance();</b>
+&nbsp;
+<b class="fc">&nbsp;        startDate.add(Calendar.MINUTE, -21);</b>
+<b class="fc">&nbsp;        startDate.set(Calendar.SECOND, 0);</b>
+<b class="fc">&nbsp;        startDate.set(Calendar.MILLISECOND, 0);</b>
+&nbsp;
+<b class="fc">&nbsp;        endDate.add(Calendar.MINUTE, 6);</b>
+<b class="fc">&nbsp;        endDate.set(Calendar.SECOND, 0);</b>
+<b class="fc">&nbsp;        endDate.set(Calendar.MILLISECOND, 0);</b>
+&nbsp;
+<b class="fc">&nbsp;        retryStartDate.add(Calendar.DATE, -1);</b>
+<b class="fc">&nbsp;        retryStartDate.set(Calendar.HOUR_OF_DAY, 23);</b>
+<b class="fc">&nbsp;        retryStartDate.set(Calendar.MINUTE, 0);</b>
+<b class="fc">&nbsp;        retryStartDate.set(Calendar.SECOND, 0);</b>
+<b class="fc">&nbsp;        retryStartDate.set(Calendar.MILLISECOND, 0);</b>
+&nbsp;
+<b class="fc">&nbsp;        List&lt;PlotIrrigationState&gt; plotsToIrrigate = plotIrrigationStateRepository.getPlotListToIrrigate(</b>
+<b class="fc">&nbsp;                SchedulingState.CONFIGURED.name(), startDate.getTime(), endDate.getTime()</b>
+<b class="fc">&nbsp;                , SchedulingState.RETRY.name(), retryStartDate.getTime());</b>
+&nbsp;
+<b class="fc">&nbsp;        if(CollectionUtils.isEmpty(plotsToIrrigate)) {</b>
+<b class="fc">&nbsp;            log.info(&quot;There is no plots to irrigate.&quot;);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        log.info(&quot;Plot count to irrigate is: {}&quot;, plotsToIrrigate.size());</b>
+<b class="nc">&nbsp;        plotsToIrrigate.forEach(obj -&gt;</b>
+<b class="nc">&nbsp;                CompletableFuture.runAsync(() -&gt; scheduleIrrigation(obj)));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void scheduleIrrigation(PlotIrrigationState obj) {
+<b class="nc">&nbsp;        if(null != obj.getRetryCount() &amp;&amp; obj.getRetryCount().intValue() &gt;= retryCount) {</b>
+<b class="nc">&nbsp;            createSendEmailModel(obj.getPlotId().toString(), obj.getDeviceId().toString(), &quot;failed to Irrigate&quot;);</b>
+<b class="nc">&nbsp;            changePlotIrrState(SchedulingState.FAILED.name(), obj.getRetryCount(), obj);</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        BigDecimal nextIrriCount = null == obj.getRetryCount() ? BigDecimal.ONE :</b>
+<b class="nc">&nbsp;                obj.getRetryCount().add(BigDecimal.ONE);</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            changePlotIrrState(SchedulingState.IN_PROGRESS.name(), nextIrriCount, obj);</b>
+<b class="nc">&nbsp;            iDeviceCommunicationService.startCommunication(obj.getDeviceId(), obj.getHoursToIrrigate().intValue(), obj.getPlotId());</b>
+<b class="nc">&nbsp;        }catch(SensorNotAvailableException e) {</b>
+<b class="nc">&nbsp;            log.debug(&quot;Sensor device throw an exception in irrigating the plot: &#39;{}&#39;, timestamp: &#39;{}&#39;&quot;,e.getPlotId(), e.getTimeStamp());</b>
+<b class="nc">&nbsp;            if(nextIrriCount.intValue() &gt;= retryCount) {</b>
+<b class="nc">&nbsp;                changePlotIrrState(SchedulingState.FAILED.name()</b>
+&nbsp;                        , nextIrriCount, obj);
+<b class="nc">&nbsp;                createSendEmailModel(obj.getPlotId().toString(), obj.getDeviceId().toString(), e.getMessage());</b>
+&nbsp;            }else {
+<b class="nc">&nbsp;                changePlotIrrState(SchedulingState.RETRY.name(), nextIrriCount, obj);</b>
+&nbsp;            }
+&nbsp;            return;
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        changePlotIrrState(SchedulingState.COMPLETED.name(), nextIrriCount, obj);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void changePlotIrrState(String newIrrState, BigDecimal retryCount, PlotIrrigationState obj) {
+<b class="nc">&nbsp;        obj.setIrrigationState(newIrrState);</b>
+<b class="nc">&nbsp;        obj.setRetryCount(retryCount);</b>
+<b class="nc">&nbsp;        obj.setModifiedDt(new Date());</b>
+<b class="nc">&nbsp;        plotIrrigationStateRepository.save(obj);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private void createSendEmailModel(String plotId, String deviceId, String reasonText) {
+<b class="nc">&nbsp;        log.info(&quot;Triggering the email alert plotId: {}, deviceId {}&quot;, plotId, deviceId);</b>
+&nbsp;
+<b class="nc">&nbsp;        String formattedSub = emailSubject.replace(&quot;$plot_id&quot;, plotId);</b>
+<b class="nc">&nbsp;        String formattedBody = emailBody.replace(&quot;$plot_id&quot;, plotId).replace(&quot;$reason_text&quot;, reasonText);</b>
+<b class="nc">&nbsp;        ScheduleFailEmailModel model = new ScheduleFailEmailModel();</b>
+<b class="nc">&nbsp;        model.setEmailSubject(formattedSub);</b>
+<b class="nc">&nbsp;        model.setEmailBody(formattedBody);</b>
+<b class="nc">&nbsp;        model.setEmailFrom(emailFrom);</b>
+<b class="nc">&nbsp;        model.setEmailTo(emailTo);</b>
+<b class="nc">&nbsp;        model.setEmailPdw(emailPdw);</b>
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        SendEmailUtility email = new SendEmailUtility();</b>
+<b class="nc">&nbsp;        email.triggerEmail(model);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-09-26 14:50</div>
+</div>
+</body>
+</html>
