@@ -1,0 +1,103 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PlotRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.automation.irrigationsystem.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: PlotRepository (com.automation.irrigationsystem.repository)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">PlotRepository$MockitoMock$plrSXQGU</td>
+  </tr>
+  <tr>
+    <td class="name">PlotRepository$MockitoMock$plrSXQGU$auxiliary$19mZKK0L</td>
+  </tr>
+  <tr>
+    <td class="name">PlotRepository$MockitoMock$plrSXQGU$auxiliary$5droe6kM</td>
+  </tr>
+  <tr>
+    <td class="name">PlotRepository$MockitoMock$plrSXQGU$auxiliary$VR8SzoMP</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.automation.irrigationsystem.repository;
+&nbsp;
+&nbsp;import com.automation.irrigationsystem.entity.Plot;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Set;
+&nbsp;
+&nbsp;@Repository
+&nbsp;public interface PlotRepository extends JpaRepository&lt;Plot, BigDecimal&gt; {
+&nbsp;
+&nbsp;    public List&lt;Plot&gt; findByCustomerIdAndActiveFlg(BigDecimal customerId, BigDecimal activeFlg);
+&nbsp;    public Plot findByCustomerIdAndIdAndActiveFlg(BigDecimal customerId, BigDecimal id, BigDecimal activeFlg);
+&nbsp;
+&nbsp;    public List&lt;Plot&gt; findByScheduleTypeAndCustomSchedIdInAndActiveFlg(String scheduleType, Set&lt;BigDecimal&gt; customSchedIdList, BigDecimal activeFlg);
+&nbsp;
+&nbsp;    public List&lt;Plot&gt; findByScheduleTypeAndCropNameInAndSoilTypeInAndActiveFlg(String name, Set&lt;String&gt; cropNameSet, Set&lt;String&gt; soilTypeSet, BigDecimal activeFlg);
+&nbsp;
+&nbsp;    public Plot findByIdAndCustomerIdAndCustomSchedIdAndActiveFlg(BigDecimal id, BigDecimal customerId, BigDecimal customSchedId, BigDecimal activeFlg);
+&nbsp;
+&nbsp;    public List&lt;Plot&gt; findByCustomerIdAndCustomSchedIdAndActiveFlg(BigDecimal customerId, BigDecimal customSchedId, BigDecimal activeFlg);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-09-26 14:50</div>
+</div>
+</body>
+</html>

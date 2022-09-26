@@ -1,0 +1,125 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ScheduleRequest</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.automation.irrigationsystem.request</a>
+</div>
+
+<h1>Coverage Summary for Class: ScheduleRequest (com.automation.irrigationsystem.request)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ScheduleRequest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.automation.irrigationsystem.request;
+&nbsp;
+&nbsp;import io.swagger.annotations.ApiModel;
+&nbsp;import io.swagger.annotations.ApiModelProperty;
+&nbsp;import lombok.Data;
+&nbsp;
+<b class="fc">&nbsp;@Data</b>
+&nbsp;@ApiModel(description = &quot;Add new schedule request&quot;)
+&nbsp;public class ScheduleRequest {
+&nbsp;
+<b class="fc">&nbsp;    private String scheduleName;</b>
+&nbsp;
+<b class="fc">&nbsp;    private String description;</b>
+&nbsp;    @ApiModelProperty(notes = &quot;Irrigation Day valid values are: DAILY,BIWEEKLY,WEEKLY&quot;, required = true, value = &quot;DAILY,BIWEEKLY,WEEKLY&quot;)
+<b class="fc">&nbsp;    private String irrigationDay;</b>
+&nbsp;
+<b class="fc">&nbsp;    private String hoursToIrrigate;</b>
+&nbsp;
+&nbsp;    @ApiModelProperty(notes = &quot;Irrigation start time in HH24:MM format. In case of empty 08:00 will be configured as default&quot;, required = false, dataType = &quot;java.lang.String&quot;, value = &quot;value in the format of HH24:MM&quot;)
+<b class="fc">&nbsp;    private String startTime;</b>
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-09-26 14:50</div>
+</div>
+</body>
+</html>

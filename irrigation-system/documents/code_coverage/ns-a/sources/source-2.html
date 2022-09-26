@@ -1,0 +1,432 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PlotService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.automation.irrigationsystem.services</a>
+</div>
+
+<h1>Coverage Summary for Class: PlotService (com.automation.irrigationsystem.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PlotService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (17/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.5%
+  </span>
+  <span class="absValue">
+    (150/164)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">PlotService$$EnhancerBySpringCGLIB$$4a76815c</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (17/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.5%
+  </span>
+  <span class="absValue">
+    (150/164)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.automation.irrigationsystem.services;
+&nbsp;
+&nbsp;import com.automation.irrigationsystem.common.*;
+&nbsp;import com.automation.irrigationsystem.entity.CustomSchedule;
+&nbsp;import com.automation.irrigationsystem.entity.Plot;
+&nbsp;import com.automation.irrigationsystem.entity.Schedule;
+&nbsp;import com.automation.irrigationsystem.exception.DataNotFoundException;
+&nbsp;import com.automation.irrigationsystem.iface.IPlotService;
+&nbsp;import com.automation.irrigationsystem.repository.CustomScheduleRepository;
+&nbsp;import com.automation.irrigationsystem.repository.PlotRepository;
+&nbsp;import com.automation.irrigationsystem.repository.ScheduleRepository;
+&nbsp;import com.automation.irrigationsystem.request.EditPlotRequest;
+&nbsp;import com.automation.irrigationsystem.request.NewPlotRequest;
+&nbsp;import com.automation.irrigationsystem.response.*;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Propagation;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;import org.springframework.util.CollectionUtils;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;@Slf4j</b>
+<b class="fc">&nbsp;public class PlotService implements IPlotService {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private PlotRepository plotRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private ScheduleRepository scheduleRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private CustomScheduleRepository customScheduleRepository;
+&nbsp;
+&nbsp;    @Value(&quot;${irrigation.schedule.defaultStartTime}&quot;)
+&nbsp;    String defaultStartTime;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+&nbsp;    public NewPlotResponse addNewPlot(String customerId, NewPlotRequest newPlotRequest) {
+<b class="fc">&nbsp;        validateAddNewPlotRequest(customerId, newPlotRequest);</b>
+<b class="fc">&nbsp;        return convertPlotToResponseObj(buildPlotObj(customerId, newPlotRequest));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class, readOnly = true)
+&nbsp;    public GetAllPlotResponse getAllPlots(String customerId) {
+<b class="fc">&nbsp;        log.info(&quot;Service: Getting the plots&quot;);</b>
+<b class="fc">&nbsp;        validateGetPlotReq(customerId);</b>
+<b class="fc">&nbsp;        List&lt;Plot&gt; plotList = plotRepository.findByCustomerIdAndActiveFlg(new BigDecimal(customerId.trim())</b>
+&nbsp;                , BigDecimal.ONE);
+<b class="fc">&nbsp;        if(CollectionUtils.isEmpty(plotList)) {</b>
+<b class="fc">&nbsp;           throw new DataNotFoundException(ResponseCodes.DATA_NOT_FOUND, &quot;Customer ID doesn&#39;t Exist&quot;);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        GetAllPlotResponse resp = new GetAllPlotResponse();</b>
+<b class="fc">&nbsp;        List&lt;PlotResponse&gt; plotResponseList = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        plotList.forEach(e -&gt; plotResponseList.add(buildPlotResponse(e)));</b>
+<b class="fc">&nbsp;        resp.setPlotList(plotResponseList);</b>
+<b class="fc">&nbsp;        resp.setResponseCode(ResponseCodes.SUCCESS);</b>
+<b class="fc">&nbsp;        resp.setResponseMessage(ResponseCodes.SUCCESS_MSG);</b>
+<b class="fc">&nbsp;        resp.setResponseTimeStamp(new Date());</b>
+<b class="fc">&nbsp;        log.info(&quot;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; All the plots retrieved successfully for the customer: {}, Plot count is: {}&quot;</b>
+<b class="fc">&nbsp;                , customerId, plotResponseList.size());</b>
+<b class="fc">&nbsp;        return resp;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+&nbsp;    public void updatePlot(String customerId, String plotId, EditPlotRequest editPlotReq) {
+<b class="fc">&nbsp;        validateUpdatePlotReq(customerId, plotId, editPlotReq);</b>
+<b class="fc">&nbsp;        Plot plot = plotRepository.findByCustomerIdAndIdAndActiveFlg(new BigDecimal(customerId.trim())</b>
+<b class="fc">&nbsp;                , new BigDecimal(plotId.trim()), BigDecimal.ONE);</b>
+<b class="fc">&nbsp;        if(null == plot) {</b>
+<b class="fc">&nbsp;            throw new DataNotFoundException(ResponseCodes.DATA_NOT_FOUND, &quot;Plot not found for the customer_id and plot_id combination.&quot;);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        buildAndUpdatePlot(editPlotReq, plot);</b>
+<b class="fc">&nbsp;        log.info(&quot;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; Plot has been updated successfully for the customer id: {}, plot id: {}&quot;, customerId, plotId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+&nbsp;    public void deletePlot(String customerId, String plotId) {
+<b class="fc">&nbsp;        validateDeletePlotReq(customerId, plotId);</b>
+<b class="fc">&nbsp;        Plot plot = plotRepository.findByCustomerIdAndIdAndActiveFlg(new BigDecimal(customerId.trim())</b>
+<b class="fc">&nbsp;                , new BigDecimal(plotId.trim()), BigDecimal.ONE);</b>
+<b class="fc">&nbsp;        if(null == plot) {</b>
+<b class="fc">&nbsp;            throw new DataNotFoundException(ResponseCodes.DATA_NOT_FOUND, &quot;Plot not found for the customer_id and plot_id combination.&quot;);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        plot.setActiveFlg(BigDecimal.ZERO);</b>
+<b class="fc">&nbsp;        plot.setModifiedDt(new Date());</b>
+<b class="fc">&nbsp;        plotRepository.save(plot);</b>
+<b class="fc">&nbsp;        log.info(&quot;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; Plot has been deleted successfully for the customer id: {}, plot id: {}&quot;, customerId, plotId);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private void validateDeletePlotReq(String customerId, String plotId) {
+<b class="fc">&nbsp;        validateGetPlotReq(customerId);</b>
+&nbsp;
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfEmpty(plotId,</b>
+&nbsp;                &quot;Plot Id must not be empty&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfNotNumber(plotId,</b>
+&nbsp;                &quot;Please input valid plot id.&quot;);
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private void buildAndUpdatePlot(EditPlotRequest editPlotReq, Plot plot) {
+<b class="fc">&nbsp;        plot.setPlotName(CommonMethods.getDefaultValueIfNull(plot.getPlotName(), editPlotReq.getPlotName()));</b>
+<b class="fc">&nbsp;        plot.setDescription(CommonMethods.getDefaultValueIfNull(plot.getDescription(), editPlotReq.getDescription()));</b>
+<b class="fc">&nbsp;        plot.setAddress(CommonMethods.getDefaultValueIfNull(plot.getAddress(), editPlotReq.getAddress()));</b>
+<b class="fc">&nbsp;        plot.setWidth(CommonMethods.getDefaultValueBDIfNull(plot.getWidth(), editPlotReq.getWidth()));</b>
+<b class="fc">&nbsp;        plot.setHeight(CommonMethods.getDefaultValueBDIfNull(plot.getHeight(), editPlotReq.getHeight()));</b>
+<b class="fc">&nbsp;        plot.setUnit(CommonMethods.getDefaultValueIfNull(plot.getUnit(), editPlotReq.getUnit()));</b>
+<b class="fc">&nbsp;        plot.setScheduleType(CommonMethods.getDefaultValueIfNull(plot.getScheduleType(), editPlotReq.getScheduleType()));</b>
+<b class="fc">&nbsp;        updateScheduleId(plot, editPlotReq.getScheduleId());</b>
+<b class="fc">&nbsp;        plot.setDeviceId(CommonMethods.getDefaultValueBDIfNull(plot.getDeviceId(), editPlotReq.getDeviceId()));</b>
+<b class="fc">&nbsp;        plot.setCropName(CommonMethods.getDefaultValueIfNull(plot.getCropName(), editPlotReq.getCropName()));</b>
+<b class="fc">&nbsp;        plot.setSoilType(CommonMethods.getDefaultValueIfNull(plot.getSoilType(), editPlotReq.getSoilType()));</b>
+<b class="fc">&nbsp;        plot.setModifiedDt(new Date());</b>
+<b class="fc">&nbsp;        plotRepository.save(plot);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    private void updateScheduleId(Plot plot, String newScheduleId) {
+<b class="fc">&nbsp;        if(plot.getScheduleType().equals(ScheduleTypes.CUSTOM.name())) {</b>
+<b class="nc">&nbsp;            if(!CommonMethods.isBlank(newScheduleId)) {</b>
+<b class="nc">&nbsp;                Optional&lt;CustomSchedule&gt; customScheduleOptional = customScheduleRepository</b>
+<b class="nc">&nbsp;                        .findById(new BigDecimal(newScheduleId.trim()));</b>
+<b class="nc">&nbsp;                if(!customScheduleOptional.isPresent()) {</b>
+<b class="nc">&nbsp;                    throw new DataNotFoundException(ResponseCodes.DATA_NOT_FOUND, &quot;Schedule Id doesn&#39;t Exist in the DB&quot;);</b>
+&nbsp;                }
+<b class="nc">&nbsp;                plot.setCustomSchedId(new BigDecimal(newScheduleId.trim()));</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }else {
+<b class="fc">&nbsp;            plot.setCustomSchedId(null);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    private void validateUpdatePlotReq(String customerId, String plotId, EditPlotRequest editPlotReq) {
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfEmpty(plotId,</b>
+&nbsp;                &quot;Plot Id must not be empty&quot;);
+&nbsp;
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfNotNumber(plotId,</b>
+&nbsp;                &quot;Please input valid plot id.&quot;);
+&nbsp;
+<b class="fc">&nbsp;        validateEditNewCommonPlotObj(customerId, editPlotReq);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private PlotResponse buildPlotResponse(Plot plot) {
+<b class="fc">&nbsp;        PlotResponse resp = new PlotResponse();</b>
+<b class="fc">&nbsp;        resp.setPlotId(plot.getId().toString());</b>
+<b class="fc">&nbsp;        resp.setPlotName(plot.getPlotName());</b>
+<b class="fc">&nbsp;        resp.setDescription(plot.getDescription());</b>
+<b class="fc">&nbsp;        resp.setCustomerId(plot.getCustomerId().toString());</b>
+<b class="fc">&nbsp;        resp.setAddress(plot.getAddress());</b>
+<b class="fc">&nbsp;        resp.setWidth(plot.getWidth().toString());</b>
+<b class="fc">&nbsp;        resp.setHeight(plot.getHeight().toString());</b>
+<b class="fc">&nbsp;        resp.setUnit(plot.getUnit());</b>
+<b class="fc">&nbsp;        resp.setScheduleType(plot.getScheduleType());</b>
+<b class="fc">&nbsp;        resp.setDeviceId(plot.getDeviceId().toString());</b>
+<b class="fc">&nbsp;        resp.setCropName(plot.getCropName());</b>
+<b class="fc">&nbsp;        resp.setSoilType(plot.getSoilType());</b>
+&nbsp;
+<b class="fc">&nbsp;        ScheduleResponse schedResp = new ScheduleResponse();</b>
+&nbsp;
+<b class="fc">&nbsp;        if(plot.getScheduleType().equals(ScheduleTypes.CUSTOM.name())) {</b>
+<b class="fc">&nbsp;            CustomSchedule customSched = plot.getCustomSchedule();</b>
+<b class="fc">&nbsp;            if(null == customSched) {</b>
+<b class="fc">&nbsp;                schedResp.setDescription(&quot;Kindly configure the schedule for your plot.&quot;);</b>
+&nbsp;            }else {
+<b class="fc">&nbsp;                schedResp.setScheduleName(customSched.getScheduleName());</b>
+<b class="fc">&nbsp;                schedResp.setDescription(customSched.getDescription());</b>
+<b class="fc">&nbsp;                schedResp.setIrrigationDay(customSched.getIrrigationDay());</b>
+<b class="fc">&nbsp;                schedResp.setStartTime(customSched.getStartTime());</b>
+<b class="fc">&nbsp;                schedResp.setHoursToIrrigate(customSched.getHoursToIrrigate().toString());</b>
+<b class="fc">&nbsp;                schedResp.setCreatedDt(customSched.getCreatedDt());</b>
+&nbsp;            }
+<b class="fc">&nbsp;        }else {</b>
+<b class="fc">&nbsp;            Schedule schedule = getScheduleForCrop(plot.getCropName(), plot.getSoilType());</b>
+<b class="fc">&nbsp;            if(null == schedule) {</b>
+<b class="fc">&nbsp;                schedResp.setDescription(&quot;Kindly contact with customer service to configure REGULAR type schedules.&quot;);</b>
+&nbsp;            }else {
+<b class="nc">&nbsp;                schedResp.setScheduleName(schedule.getScheduleName());</b>
+<b class="nc">&nbsp;                schedResp.setDescription(schedule.getDescription());</b>
+<b class="nc">&nbsp;                schedResp.setIrrigationDay(schedule.getIrrigationDay());</b>
+<b class="nc">&nbsp;                schedResp.setStartTime(defaultStartTime);</b>
+<b class="nc">&nbsp;                schedResp.setHoursToIrrigate(schedule.getHoursToIrrigate().toString());</b>
+<b class="nc">&nbsp;                schedResp.setCreatedDt(schedule.getCreatedDt());</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        resp.setSchedule(schedResp);</b>
+<b class="fc">&nbsp;        return resp;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private Schedule getScheduleForCrop(String cropName, String soilType) {
+<b class="fc">&nbsp;        String weatherName = CommonMethods.getWeatherNameForDate(Calendar.getInstance());</b>
+<b class="fc">&nbsp;        List&lt;Schedule&gt; scheduleList = scheduleRepository.findByCropNameAndSoilTypeAndWeatherTypeAndActiveFlg(</b>
+&nbsp;                cropName, soilType, weatherName, BigDecimal.ONE);
+<b class="fc">&nbsp;        if(!CollectionUtils.isEmpty(scheduleList)) {</b>
+<b class="nc">&nbsp;            return scheduleList.get(0);</b>
+&nbsp;        }else {
+<b class="fc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void validateGetPlotReq(String customerId) {
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfEmpty(customerId,</b>
+&nbsp;                &quot;Customer Id must not be empty&quot;);
+&nbsp;
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfNotNumber(customerId,</b>
+&nbsp;                &quot;Please input valid customer id.&quot;);
+&nbsp;    }
+&nbsp;
+&nbsp;    private NewPlotResponse convertPlotToResponseObj(Plot plot) {
+<b class="fc">&nbsp;        NewPlotResponse resp = new NewPlotResponse();</b>
+<b class="fc">&nbsp;        resp.setPlotId(plot.getId().toString());</b>
+<b class="fc">&nbsp;        resp.setPlotName(plot.getPlotName());</b>
+<b class="fc">&nbsp;        resp.setDescription(plot.getDescription());</b>
+<b class="fc">&nbsp;        resp.setCustomerId(plot.getCustomerId().toString());</b>
+<b class="fc">&nbsp;        resp.setAddress(plot.getAddress());</b>
+<b class="fc">&nbsp;        resp.setWidth(plot.getWidth().toString());</b>
+<b class="fc">&nbsp;        resp.setHeight(plot.getHeight().toString());</b>
+<b class="fc">&nbsp;        resp.setUnit(plot.getUnit());</b>
+<b class="fc">&nbsp;        resp.setScheduleType(plot.getScheduleType());</b>
+<b class="fc">&nbsp;        resp.setDeviceId(plot.getDeviceId().toString());</b>
+<b class="fc">&nbsp;        resp.setCropName(plot.getCropName());</b>
+<b class="fc">&nbsp;        resp.setSoilType(plot.getSoilType());</b>
+<b class="fc">&nbsp;        resp.setResponseCode(ResponseCodes.SUCCESS);</b>
+<b class="fc">&nbsp;        resp.setResponseMessage(ResponseCodes.CREATED_MSG);</b>
+<b class="fc">&nbsp;        resp.setResponseTimeStamp(new Date());</b>
+<b class="fc">&nbsp;        log.info(&quot;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; Plot has been added successfully, generated plot id is: {}&quot;, plot.getId());</b>
+<b class="fc">&nbsp;        return resp;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private Plot buildPlotObj(String customerId, NewPlotRequest newPlotRequest) {
+<b class="fc">&nbsp;        Plot plot = new Plot();</b>
+<b class="fc">&nbsp;        plot.setPlotName(newPlotRequest.getPlotName().toUpperCase());</b>
+<b class="fc">&nbsp;        plot.setDescription(newPlotRequest.getDescription());</b>
+<b class="fc">&nbsp;        plot.setCustomerId(new BigDecimal(customerId.trim()));</b>
+<b class="fc">&nbsp;        plot.setAddress(newPlotRequest.getAddress());</b>
+<b class="fc">&nbsp;        plot.setWidth(new BigDecimal(newPlotRequest.getWidth().trim()));</b>
+<b class="fc">&nbsp;        plot.setHeight(new BigDecimal(newPlotRequest.getHeight().trim()));</b>
+<b class="fc">&nbsp;        plot.setUnit(newPlotRequest.getUnit().toUpperCase());</b>
+<b class="fc">&nbsp;        plot.setScheduleType(newPlotRequest.getScheduleType().toUpperCase());</b>
+<b class="fc">&nbsp;        plot.setDeviceId(new BigDecimal(newPlotRequest.getDeviceId().trim()));</b>
+<b class="fc">&nbsp;        plot.setSoilType(newPlotRequest.getSoilType().toUpperCase());</b>
+<b class="fc">&nbsp;        plot.setCropName(newPlotRequest.getCropName().toUpperCase());</b>
+<b class="fc">&nbsp;        plot.setActiveFlg(BigDecimal.ONE);</b>
+<b class="fc">&nbsp;        plot.setCreatedDt(new Date());</b>
+<b class="fc">&nbsp;        plot = plotRepository.save(plot);</b>
+<b class="fc">&nbsp;        return plot;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void validateAddNewPlotRequest(String customerId, NewPlotRequest newPlotRequest) {
+&nbsp;
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfEmpty(newPlotRequest.getPlotName(),</b>
+&nbsp;                &quot;Plot Name must not be empty&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfEmpty(newPlotRequest.getAddress(),</b>
+&nbsp;                &quot;Plot Address must not be empty&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfEmpty(newPlotRequest.getWidth(),</b>
+&nbsp;                &quot;Plot Width must not be empty&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfEmpty(newPlotRequest.getHeight(),</b>
+&nbsp;                &quot;Plot Height must not be empty&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfEmpty(newPlotRequest.getUnit(),</b>
+&nbsp;                &quot;Plot Unit must not be empty&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfEmpty(newPlotRequest.getScheduleType(),</b>
+&nbsp;                &quot;Plot Schedule Type must not be empty&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfEmpty(newPlotRequest.getDeviceId(),</b>
+&nbsp;                &quot;Plot Device Id must not be empty&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfEmpty(newPlotRequest.getCropName(),</b>
+&nbsp;                &quot;Crop Name must not be empty&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfEmpty(newPlotRequest.getSoilType(),</b>
+&nbsp;                &quot;Soil Type must not be empty&quot;);
+&nbsp;
+<b class="fc">&nbsp;        validateEditNewCommonPlotObj(customerId, newPlotRequest);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void validateEditNewCommonPlotObj(String customerId, NewPlotRequest newPlotRequest) {
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfEmpty(customerId,</b>
+&nbsp;                &quot;Customer Id must not be empty&quot;);
+&nbsp;
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfNotNumber(customerId,</b>
+&nbsp;                &quot;Please input valid customer id.&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfNotNumber(newPlotRequest.getWidth(),</b>
+&nbsp;                &quot;Please input valid plot width.&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfNotNumber(newPlotRequest.getHeight(),</b>
+&nbsp;                &quot;Please input valid plot height.&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfNotNumber(newPlotRequest.getDeviceId(),</b>
+&nbsp;                &quot;Please input valid plot device id.&quot;);
+&nbsp;
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfLengthInvalid(newPlotRequest.getPlotName(), 50,</b>
+&nbsp;                &quot;Plot Name should not be more than 50 character long&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfLengthInvalid(newPlotRequest.getDescription(), 200,</b>
+&nbsp;                &quot;Plot Description should not be more than 200 character long&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfLengthInvalid(newPlotRequest.getAddress(), 200,</b>
+&nbsp;                &quot;Plot Address should not be more than 200 character long&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfLengthInvalid(newPlotRequest.getCropName(), 20,</b>
+&nbsp;                &quot;Crop Name should not be more than 20 character long&quot;);
+<b class="fc">&nbsp;        CommonMethods.throwExceptionIfLengthInvalid(newPlotRequest.getSoilType(), 20,</b>
+&nbsp;                &quot;Soil Type should not be more than 20 character long&quot;);
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        CommonMethods.validateInputWithEnum(PlotUnit.class, newPlotRequest.getUnit()</b>
+&nbsp;                , &quot;Please provide valid input for Plot Unit&quot;);
+<b class="fc">&nbsp;        CommonMethods.validateInputWithEnum(ScheduleTypes.class, newPlotRequest.getScheduleType()</b>
+&nbsp;                , &quot;Please provide valid input for Schedule Type&quot;);
+<b class="fc">&nbsp;        CommonMethods.validateInputWithEnum(SoilTypes.class, newPlotRequest.getSoilType()</b>
+&nbsp;                , &quot;Please provide valid input for Soil Type&quot;);
+<b class="fc">&nbsp;        CommonMethods.validateInputWithEnum(CropTypes.class, newPlotRequest.getCropName()</b>
+&nbsp;                , &quot;Please provide valid input for Crop Name&quot;);
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-09-26 14:50</div>
+</div>
+</body>
+</html>

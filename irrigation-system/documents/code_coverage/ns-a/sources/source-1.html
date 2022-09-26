@@ -1,0 +1,141 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DeviceCommunicationService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.automation.irrigationsystem.services</a>
+</div>
+
+<h1>Coverage Summary for Class: DeviceCommunicationService (com.automation.irrigationsystem.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DeviceCommunicationService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    69.2%
+  </span>
+  <span class="absValue">
+    (9/13)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.automation.irrigationsystem.services;
+&nbsp;
+&nbsp;import com.automation.irrigationsystem.exception.SensorNotAvailableException;
+&nbsp;import com.automation.irrigationsystem.iface.IDeviceCommunicationService;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.util.Date;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;@Slf4j</b>
+<b class="fc">&nbsp;public class DeviceCommunicationService implements IDeviceCommunicationService {</b>
+&nbsp;
+&nbsp;    @Value(&quot;${irrigation.schedule.failedDeviceId:0}&quot;)
+&nbsp;    private int failedDeviceId;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void startCommunication(BigDecimal deviceId, int hoursToIrrigate, BigDecimal plotId) throws SensorNotAvailableException {
+<b class="fc">&nbsp;        log.info(&quot;-----Starting to irrigate the plot: {} with Device Id: {} &quot;, plotId, deviceId);</b>
+<b class="fc">&nbsp;        if(failedDeviceId == deviceId.intValue()) {</b>
+<b class="fc">&nbsp;            throw new SensorNotAvailableException(deviceId.toString()</b>
+<b class="fc">&nbsp;                    , plotId.toString(), String.valueOf(hoursToIrrigate), new Date()</b>
+&nbsp;                    ,&quot;Currently Device is not available to irrigate the plot&quot;);
+&nbsp;        }
+&nbsp;        try {
+<b class="fc">&nbsp;            Thread.sleep(1000);</b>
+<b class="nc">&nbsp;        } catch (InterruptedException e) {</b>
+&nbsp;            // Restore interrupted state...
+<b class="nc">&nbsp;            Thread.currentThread().interrupt();</b>
+<b class="nc">&nbsp;            throw new SensorNotAvailableException(deviceId.toString()</b>
+<b class="nc">&nbsp;                    , plotId.toString(), String.valueOf(hoursToIrrigate), new Date()</b>
+&nbsp;                    ,&quot;Something went wrong while sending the irrigation request&quot;);
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        log.info(&quot;-----Irrigation COMPLETED for the plot: {} with Device Id: {} &quot;, plotId, deviceId);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-09-26 14:50</div>
+</div>
+</body>
+</html>
