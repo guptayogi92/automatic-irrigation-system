@@ -1,0 +1,368 @@
+{
+	"variables": [],
+	"info": {
+		"name": "automatic-irrigation",
+		"_postman_id": "f12f7d20-bd70-5b53-3680-7610bb1a56b5",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01_PlotManagement",
+			"description": "",
+			"item": [
+				{
+					"name": "01_Add_New_Plot__RegularType",
+					"request": {
+						"url": "http://localhost:8080/irrigation/plotmanagement/customer/1",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": \"MORENA\",\r\n  \"cropName\": \"WHEAT\",\r\n  \"description\": \"Wheat plot\",\r\n  \"deviceId\": \"1\",\r\n  \"height\": \"10\",\r\n  \"plotName\": \"TEST PLOT\",\r\n  \"scheduleType\": \"REGULAR\",\r\n  \"soilType\": \"RED_SOIL\",\r\n  \"unit\": \"FOOT\",\r\n  \"width\": \"20\"\r\n}"
+						},
+						"description": "HTTP Request to add new Plot."
+					},
+					"response": []
+				},
+				{
+					"name": "02_Add_New_Plot__CustomType",
+					"request": {
+						"url": "http://localhost:8080/irrigation/plotmanagement/customer/1",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": \"MORENA\",\r\n  \"cropName\": \"WHEAT\",\r\n  \"description\": \"Wheat plot with CUSTOM schedule\",\r\n  \"deviceId\": \"1\",\r\n  \"height\": \"10\",\r\n  \"plotName\": \"TEST PLOT\",\r\n  \"scheduleType\": \"CUSTOM\",\r\n  \"soilType\": \"RED_SOIL\",\r\n  \"unit\": \"FOOT\",\r\n  \"width\": \"20\"\r\n}"
+						},
+						"description": "HTTP Request to add new Plot."
+					},
+					"response": []
+				},
+				{
+					"name": "03_Get_All_Plot",
+					"request": {
+						"url": "http://localhost:8080/irrigation/plotmanagement/customer/1",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "04_Get_All_Plot__InvalidCustId",
+					"request": {
+						"url": "http://localhost:8080/irrigation/plotmanagement/customer/2",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "05_Update_ExistingPlot__EditAddress",
+					"request": {
+						"url": "http://localhost:8080/irrigation/plotmanagement/customer/1/plot/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": \"Joura\",\r\n  \"cropName\": \"\",\r\n  \"description\": \"\",\r\n  \"deviceId\": \"\",\r\n  \"height\": \"\",\r\n  \"plotName\": \"\",\r\n  \"scheduleId\": \"\",\r\n  \"scheduleType\": \"\",\r\n  \"soilType\": \"\",\r\n  \"unit\": \"\",\r\n  \"width\": \"\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "06_Update_ExistingPlot__EditDeviceId",
+					"request": {
+						"url": "http://localhost:8080/irrigation/plotmanagement/customer/1/plot/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": \"\",\r\n  \"cropName\": \"\",\r\n  \"description\": \"\",\r\n  \"deviceId\": \"5\",\r\n  \"height\": \"\",\r\n  \"plotName\": \"\",\r\n  \"scheduleId\": \"\",\r\n  \"scheduleType\": \"\",\r\n  \"soilType\": \"\",\r\n  \"unit\": \"\",\r\n  \"width\": \"\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "07_Update_ExistingPlot__EditMultipleFields",
+					"request": {
+						"url": "http://localhost:8080/irrigation/plotmanagement/customer/1/plot/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": \"Joura\",\r\n  \"cropName\": \"RICE\",\r\n  \"description\": \"RICE Plot after updation\",\r\n  \"deviceId\": \"\",\r\n  \"height\": \"50\",\r\n  \"plotName\": \"Rice Plot\",\r\n  \"scheduleId\": \"\",\r\n  \"scheduleType\": \"\",\r\n  \"soilType\": \"\",\r\n  \"unit\": \"\",\r\n  \"width\": \"\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "08_Get_All_Plot_After_Updation",
+					"request": {
+						"url": "http://localhost:8080/irrigation/plotmanagement/customer/1",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "09_Update_ExistingPlot__InvalidCustomerId",
+					"request": {
+						"url": "http://localhost:8080/irrigation/plotmanagement/customer/10/plot/1",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": \"Joura\",\r\n  \"cropName\": \"RICE\",\r\n  \"description\": \"RICE Plot after updation\",\r\n  \"deviceId\": \"\",\r\n  \"height\": \"50\",\r\n  \"plotName\": \"Rice Plot\",\r\n  \"scheduleId\": \"\",\r\n  \"scheduleType\": \"\",\r\n  \"soilType\": \"\",\r\n  \"unit\": \"\",\r\n  \"width\": \"\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "10_Update_ExistingPlot__InvalidPlotId",
+					"request": {
+						"url": "http://localhost:8080/irrigation/plotmanagement/customer/1/plot/10",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": \"Joura\",\r\n  \"cropName\": \"RICE\",\r\n  \"description\": \"RICE Plot after updation\",\r\n  \"deviceId\": \"\",\r\n  \"height\": \"50\",\r\n  \"plotName\": \"Rice Plot\",\r\n  \"scheduleId\": \"\",\r\n  \"scheduleType\": \"\",\r\n  \"soilType\": \"\",\r\n  \"unit\": \"\",\r\n  \"width\": \"\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "11_Delete_Plot",
+					"request": {
+						"url": "http://localhost:8080/irrigation/plotmanagement/customer/1/plot/1",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "12_Delete_Plot_InvalidPlotId",
+					"request": {
+						"url": "http://localhost:8080/irrigation/plotmanagement/customer/1/plot/10",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "13_Get_All_Plot",
+					"request": {
+						"url": "http://localhost:8080/irrigation/plotmanagement/customer/1",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "02_ScheduleManagement",
+			"description": "",
+			"item": [
+				{
+					"name": "01_Add_New_Schedule",
+					"request": {
+						"url": "http://localhost:8080/irrigation/schedule/customer/1/plot/2",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"New Schedule\",\r\n  \"hoursToIrrigate\": \"2\",\r\n  \"irrigationDay\": \"DAILY\",\r\n  \"scheduleName\": \"DAILY IRRIGATION\",\r\n  \"startTime\": \"17:07\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "02_Add_New_Schedule__InvalidData",
+					"request": {
+						"url": "http://localhost:8080/irrigation/schedule/customer/1/plot/2",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"New Schedule\",\r\n  \"hoursToIrrigate\": \"A\",\r\n  \"irrigationDay\": \"DAILY\",\r\n  \"scheduleName\": \"DAILY IRRIGATION\",\r\n  \"startTime\": \"10:00\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "03_Update_Schedule",
+					"request": {
+						"url": "http://localhost:8080/irrigation/schedule/customer/1/plot/2/schedule/5",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"Updated Schedule\",\r\n  \"hoursToIrrigate\": \"\",\r\n  \"irrigationDay\": \"\",\r\n  \"scheduleName\": \"\",\r\n  \"startTime\": \"\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "04_Update_Schedule_Invalid_CustomerId",
+					"request": {
+						"url": "http://localhost:8080/irrigation/schedule/customer/7/plot/2/schedule/5",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"Updated Schedule\",\r\n  \"hoursToIrrigate\": \"\",\r\n  \"irrigationDay\": \"\",\r\n  \"scheduleName\": \"\",\r\n  \"startTime\": \"\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "05_Update_Schedule_InvalidData",
+					"request": {
+						"url": "http://localhost:8080/irrigation/schedule/customer/1/plot/2/schedule/5",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"Updated Schedule\",\r\n  \"hoursToIrrigate\": \"\",\r\n  \"irrigationDay\": \"\",\r\n  \"scheduleName\": \"\",\r\n  \"startTime\": \"ABC\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "06_Delete_Schedule",
+					"request": {
+						"url": "http://localhost:8080/irrigation/schedule/customer/1/plot/2/schedule/5",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "07_Delete_Schedule_InvalidData",
+					"request": {
+						"url": "http://localhost:8080/irrigation/schedule/customer/1/plot/2/schedule/8",
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "03_Trigger_Scheduler_Manually",
+			"description": "",
+			"item": [
+				{
+					"name": "01_Trigger_Schedular_Manually",
+					"request": {
+						"url": "http://localhost:8080/irrigation/trigger_daily_sched_manually",
+						"method": "POST",
+						"header": [],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
